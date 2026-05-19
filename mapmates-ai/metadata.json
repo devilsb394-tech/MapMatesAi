@@ -1,6 +1,0 @@
-{
-  "name": "Mapmates Ai",
-  "description": "Visionary AI assistant created single-handedly by Faizan Zeeshan. Modern intelligence for modern explorers featuring Grok AI and a neon aesthetic.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
