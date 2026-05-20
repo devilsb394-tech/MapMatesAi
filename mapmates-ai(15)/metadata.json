@@ -1,6 +1,0 @@
-{
-  "name": "MapMates Ai",
-  "description": "MapMates Ai - A premier map-based location and intelligent chatbot companion.",
-  "requestFramePermissions": ["microphone"],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
