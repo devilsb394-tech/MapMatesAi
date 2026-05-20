@@ -1,0 +1,21 @@
+{
+  "name": "MapMates Ai",
+  "short_name": "MapMates Ai",
+  "description": "MapMates Ai is a next-generation map-based location chatbot assistant designed by Faizan Zeeshan.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#00f2ff",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3%3Crect width='100' height='100' rx='20' fill='%2300f2ff'/%3E%3Cpath d='M70 0 H100 V30 Z' fill='%23facc15'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='42' fill='%23050505'%3EMM%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3%3Crect width='100' height='100' rx='20' fill='%2300f2ff'/%3E%3Cpath d='M70 0 H100 V30 Z' fill='%23facc15'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='42' fill='%23050505'%3EMM%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
