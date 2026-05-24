@@ -1,0 +1,64 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique Firebase Auth UID."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User's display name."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the user profile was created."
+        }
+      },
+      "required": ["userId", "email", "createdAt"]
+    },
+    "ChatLog": {
+      "title": "ChatLog",
+      "description": "Saved history logs of chats with MapMates AI.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique Firebase Auth UID."
+        },
+        "question": {
+          "type": "string",
+          "description": "The query asked by the user."
+        },
+        "response": {
+          "type": "string",
+          "description": "The reply spoken or written by the AI."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the message was processed."
+        }
+      },
+      "required": ["userId", "question", "response", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Individual user profiles."
+    },
+    "/users/{userId}/chats/{chatId}": {
+      "schema": "ChatLog",
+      "description": "Private, secure history logs of chats for the user."
+    }
+  }
+}
