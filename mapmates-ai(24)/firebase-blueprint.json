@@ -1,0 +1,195 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique Firebase Auth UID."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User's display name."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the user profile was created."
+        }
+      },
+      "required": ["userId", "email", "createdAt"]
+    },
+    "ChatLog": {
+      "title": "ChatLog",
+      "description": "Saved history logs of chats with MapMates AI.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique Firebase Auth UID."
+        },
+        "question": {
+          "type": "string",
+          "description": "The query asked by the user."
+        },
+        "response": {
+          "type": "string",
+          "description": "The reply spoken or written by the AI."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the message was processed."
+        }
+      },
+      "required": ["userId", "question", "response", "timestamp"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "User-submitted feedback on the application.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The Firebase Auth UID of the sender or guest."
+        },
+        "userName": {
+          "type": "string",
+          "description": "The display name of the feedback sender."
+        },
+        "userLocation": {
+          "type": "string",
+          "description": "The approximate location context of the feedback."
+        },
+        "text": {
+          "type": "string",
+          "description": "The user's feedback text message."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the feedback was submitted."
+        }
+      },
+      "required": ["userId", "userName", "userLocation", "text", "timestamp"]
+    },
+    "AnalyticsSession": {
+      "title": "AnalyticsSession",
+      "description": "Google Analytics and Microsoft Clarity-like user session event and interaction telemetry.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The Firebase Auth UID of the sender or guest."
+        },
+        "userName": {
+          "type": "string",
+          "description": "The display name of the user."
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "The email of the user if logged in."
+        },
+        "referrer": {
+          "type": "string",
+          "description": "The referral or source URL."
+        },
+        "deviceInfo": {
+          "type": "string",
+          "description": "Information about the user's browser viewport and user agent."
+        },
+        "totalClicks": {
+          "type": "integer",
+          "description": "Total number of interactive clicks."
+        },
+        "rageClicks": {
+          "type": "integer",
+          "description": "Number of rapid consecutive clicked interactions on same element."
+        },
+        "timeSpentSeconds": {
+          "type": "integer",
+          "description": "Total time spent during session in seconds."
+        },
+        "clickedItems": {
+          "type": "string",
+          "description": "Serialized JSON of specific items/features and click detail logs."
+        },
+        "mostUsedFeatures": {
+          "type": "string",
+          "description": "Serialized representation of top components or features interacted with."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Real-time timestamp of session updates."
+        }
+      },
+      "required": ["userId", "userName", "userEmail", "referrer", "deviceInfo", "totalClicks", "rageClicks", "timeSpentSeconds", "clickedItems", "mostUsedFeatures", "timestamp"]
+    },
+    "Idea": {
+      "title": "Idea",
+      "description": "User-submitted ideas for MapMates and direct contact queries to Faizan.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The Firebase Auth UID of the sender or guest."
+        },
+        "userName": {
+          "type": "string",
+          "description": "The display name of the feedback sender."
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "The email of the user if logged in."
+        },
+        "ideaText": {
+          "type": "string",
+          "description": "The content details of the user idea or message."
+        },
+        "category": {
+          "type": "string",
+          "description": "The classified category (e.g. idea or contact)."
+        },
+        "aiAnalysis": {
+          "type": "string",
+          "description": "Verification and analysis feedback from the AI Moderator."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the idea was validated and posted."
+        }
+      },
+      "required": ["userId", "userName", "userEmail", "ideaText", "category", "aiAnalysis", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Individual user profiles."
+    },
+    "/users/{userId}/chats/{chatId}": {
+      "schema": "ChatLog",
+      "description": "Private, secure history logs of chats for the user."
+    },
+    "/feedback/{feedbackId}": {
+      "schema": "Feedback",
+      "description": "System feedback submissions."
+    },
+    "/analytics/{sessionId}": {
+      "schema": "AnalyticsSession",
+      "description": "Secure Google Analytics and Microsoft Clarity session logs."
+    },
+    "/ideas/{ideaId}": {
+      "schema": "Idea",
+      "description": "Moderated user ideas and Faizan contact submissions."
+    }
+  }
+}

@@ -1,0 +1,139 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Entity validation
+    function isValidUser(data) {
+      return data.keys().hasAll(['userId', 'displayName', 'email', 'createdAt'])
+        && data.keys().size() == 4
+        && data.userId is string && data.userId.size() <= 128
+        && data.displayName is string && data.displayName.size() <= 100
+        && data.email is string && data.email.size() <= 100
+        && data.createdAt is timestamp;
+    }
+
+    function isValidChat(data) {
+      return data.keys().hasAll(['userId', 'question', 'response', 'timestamp'])
+        && data.keys().size() == 4
+        && data.userId is string && data.userId.size() <= 128
+        && data.question is string && data.question.size() <= 50000
+        && data.response is string && data.response.size() <= 50000
+        && data.timestamp is timestamp;
+    }
+
+    function isValidFeedback(data) {
+      return data.keys().hasAll(['userId', 'userName', 'userLocation', 'text', 'timestamp'])
+        && data.keys().size() == 5
+        && data.userId is string && data.userId.size() <= 128
+        && data.userName is string && data.userName.size() <= 100
+        && data.userLocation is string && data.userLocation.size() <= 200
+        && data.text is string && data.text.size() <= 50000
+        && data.timestamp is timestamp;
+    }
+
+    function isValidAnalytics(data) {
+      return data.keys().hasAll(['userId', 'userName', 'userEmail', 'referrer', 'deviceInfo', 'totalClicks', 'rageClicks', 'timeSpentSeconds', 'clickedItems', 'mostUsedFeatures', 'timestamp'])
+        && data.keys().size() == 11
+        && data.userId is string && data.userId.size() <= 128
+        && data.userName is string && data.userName.size() <= 200
+        && data.userEmail is string && data.userEmail.size() <= 200
+        && data.referrer is string && data.referrer.size() <= 1000
+        && data.deviceInfo is string && data.deviceInfo.size() <= 1000
+        && data.totalClicks is int
+        && data.rageClicks is int
+        && data.timeSpentSeconds is int
+        && data.clickedItems is string && data.clickedItems.size() <= 80000
+        && data.mostUsedFeatures is string && data.mostUsedFeatures.size() <= 10000
+        && data.timestamp is timestamp;
+    }
+
+    function isValidIdea(data) {
+      return data.keys().hasAll(['userId', 'userName', 'userEmail', 'ideaText', 'category', 'aiAnalysis', 'timestamp'])
+        && data.keys().size() == 7
+        && data.userId is string && data.userId.size() <= 128
+        && data.userName is string && data.userName.size() <= 100
+        && data.userEmail is string && data.userEmail.size() <= 100
+        && data.ideaText is string && data.ideaText.size() <= 50000
+        && data.category is string && data.category.size() <= 50
+        && data.aiAnalysis is string && data.aiAnalysis.size() <= 5000
+        && data.timestamp is timestamp;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) 
+        && isValidUser(incoming())
+        && incoming().userId == request.auth.uid
+        && incoming().createdAt == request.time;
+      allow update: if isOwner(userId)
+        && isValidUser(incoming())
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt;
+
+      // Subcollection for user chat logs (Immutable history logs)
+      match /chats/{chatId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId)
+          && isValidChat(incoming())
+          && incoming().userId == request.auth.uid
+          && incoming().timestamp == request.time;
+      }
+    }
+
+    // Learned geocodes for community learning and caching (Layer 6)
+    match /learned_geocodes/{docId} {
+      allow read, write: if true;
+    }
+
+    // Feedback from users (Zero-Trust submission gate)
+    match /feedback/{feedbackId} {
+      allow create: if isValidId(feedbackId)
+        && isValidFeedback(incoming())
+        && incoming().timestamp == request.time;
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Modern Ideas & Contact pitches
+    match /ideas/{ideaId} {
+      allow create: if isValidId(ideaId)
+        && isValidIdea(incoming())
+        && incoming().timestamp == request.time;
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || request.auth.token.email == "devilsb394@gmail.com");
+      allow update, delete: if false;
+    }
+
+    // Analytics sessions (Clarity & GA style tracker)
+    match /analytics/{sessionId} {
+      allow create: if isValidId(sessionId)
+        && isValidAnalytics(incoming())
+        && incoming().timestamp == request.time;
+      allow update: if isValidId(sessionId)
+        && isValidAnalytics(incoming());
+      allow read: if isSignedIn() && request.auth.token.email == "devilsb394@gmail.com";
+      allow delete: if false;
+    }
+  }
+}
